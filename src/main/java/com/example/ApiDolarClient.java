@@ -14,8 +14,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-/* Para hacer el get request de esta url debemos importar las librerías URL y HttpURLConnection 
-y escribir el código dentro de un try catch block, ya que la conexión puede fallar */
 
 public class ApiDolarClient {
     public String consultar(){
@@ -24,27 +22,27 @@ public class ApiDolarClient {
 
         try{
             URL url = new URL(apiUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection(); // Se abre una conexión con la API usando la URL.
-            connection.setRequestMethod("GET"); //Se establece el método de la petición HTTP como GET
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection(); 
+            connection.setRequestMethod("GET"); 
             connection.setRequestProperty(
-                "Accept", "application/json"); //Indica que esperas recibir una respuesta en formato JSON.
+                "Accept", "application/json"); 
 
-            if(connection.getResponseCode() == 200){ // 200==OK
-                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream())); //Se utiliza un BufferedReader para leer la respuesta línea por línea.
+            if(connection.getResponseCode() == 200){ 
+                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream())); 
                 
-                StringBuilder response = new StringBuilder();  //  El StringBuilder se usa para concatenar las líneas de la respuesta en una cadena.
+                StringBuilder response = new StringBuilder();  
                 String line;
-                while ((line = br.readLine()) != null) { //El bucle lee cada línea de la respuesta hasta que no haya más.
-                    response.append(line); //Cada línea se agrega a la variable response.
+                while ((line = br.readLine()) != null) { 
+                    response.append(line); 
                 }
-                output = response.toString();  // La respuesta completa se convierte en una cadena y se almacena
+                output = response.toString(); 
 
-                connection.disconnect(); //Después de leer la respuesta, la conexión se cierra.
+                connection.disconnect(); 
             }
             else{
-                output = "Error al consultar la API: " + connection.getResponseCode(); //Si el código de respuesta no es 200, se guarda un mensaje de error en output con el código de error.
+                output = "Error al consultar la API: " + connection.getResponseCode(); 
             }
-        } catch (IOException e) { //Si ocurre una excepción de entrada/salida, se asigna un mensaje de error genérico.
+        } catch (IOException e) { 
             output = "Error al consultar la API";
         }
 
@@ -54,17 +52,10 @@ public class ApiDolarClient {
 
     public double obtenerTasaDeCambio(boolean esCompra) {
         String jsonResponse = consultar();
-        
-        // Parsear el JSON
         JsonArray jsonArray = JsonParser.parseString(jsonResponse).getAsJsonArray();
-
-        //Buscar el tipo de cambio oficial
         for (JsonElement elemento : jsonArray) {
             JsonObject jsonObject = elemento.getAsJsonObject();
-
-            // Verificar si es el tipo "oficial"
             if (jsonObject.get("casa").getAsString().equalsIgnoreCase("oficial")) {
-                // Si es compra o venta
                 if (esCompra) {
                     return jsonObject.get("venta").getAsDouble();
                 } else {
@@ -72,7 +63,7 @@ public class ApiDolarClient {
                 }
             }
         }
-        // Si no se encuentra el tipo, devolver un valor por defecto o lanzar una excepción
+        
         throw new IllegalArgumentException("No se pudo encontrar el tipo de cambio oficial.");
     }
 }
