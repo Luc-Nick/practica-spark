@@ -9,6 +9,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 /* Para hacer el get request de esta url debemos importar las librerías URL y HttpURLConnection 
 y escribir el código dentro de un try catch block, ya que la conexión puede fallar */
 
@@ -44,6 +49,31 @@ public class ApiDolarClient {
         }
 
         return output; 
+    }
+
+
+    public double obtenerTasaDeCambio(boolean esCompra) {
+        String jsonResponse = consultar();
+        
+        // Parsear el JSON
+        JsonArray jsonArray = JsonParser.parseString(jsonResponse).getAsJsonArray();
+
+        //Buscar el tipo de cambio oficial
+        for (JsonElement elemento : jsonArray) {
+            JsonObject jsonObject = elemento.getAsJsonObject();
+
+            // Verificar si es el tipo "oficial"
+            if (jsonObject.get("casa").getAsString().equalsIgnoreCase("oficial")) {
+                // Si es compra o venta
+                if (esCompra) {
+                    return jsonObject.get("venta").getAsDouble();
+                } else {
+                    return jsonObject.get("compra").getAsDouble();
+                }
+            }
+        }
+        // Si no se encuentra el tipo, devolver un valor por defecto o lanzar una excepción
+        throw new IllegalArgumentException("No se pudo encontrar el tipo de cambio oficial.");
     }
 }
 

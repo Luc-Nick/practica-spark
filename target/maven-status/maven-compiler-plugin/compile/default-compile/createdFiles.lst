@@ -1,4 +1,5 @@
 com\example\CalculadoraControlador.class
+com\example\DolarControlador.class
 com\example\UsuariosControlador.class
 com\example\CalculadoraMain.class
 com\example\SegAHora.class
@@ -16,4 +17,5 @@ com\example\LibroControlador.class
 com\example\Par.class
 com\example\Calculadora.class
 com\example\LibroService.class
+com\example\ApiDolarClient.class
 com\example\Usuarios.class

@@ -15,5 +15,6 @@ public class TpMain {
         get("/modificarUsuario", UsuariosControlador.modificarUsuario); // ej6
         get("/libros",LibroControlador.obtenerLibros); //ej7
         get("/libros/:id",LibroControlador.obtenerLibroPorId); //ej7
+        get("/convertir/:monto",DolarControlador.obtenerConversion); //ej8
     }
 }
